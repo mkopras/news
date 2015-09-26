@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
-$app['debug'] = true;
+$app['debug'] = false;
 $app['rss_client'] = $app->share(function () {
     return new \Vinelab\Rss\Rss();
 });
