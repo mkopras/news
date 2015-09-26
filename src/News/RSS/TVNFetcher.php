@@ -24,11 +24,11 @@ class TVNFetcher
         $feed = $this->rss->feed(self::NEWS_FEED);
         foreach($feed->articles() as $article) {
             $items[] = new Item(
-                $article->title,
-                $article->description,
+                trim($article->title),
+                trim($article->description),
                 'pl',
                 new \DateTime($article->pubDate),
-                $article->link
+                trim($article->link)
             );
         }
 
