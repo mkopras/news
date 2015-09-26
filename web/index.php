@@ -42,5 +42,12 @@ $app->get('/v1/list/{page}', function ($page) use ($app) {
         return json_encode(['error' => 'Problem with processing']);
     }
 });
+$app['news_fetcher'] = $app->share(function () {
+    return new \News\RSS\Fetcher();
+});
+
+$app->get('/hello/{name}', function($name) use($app) { 
+    return 'Hello '.$app->escape($name);
+}); 
 
 $app->run(); 
