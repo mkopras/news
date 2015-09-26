@@ -2,52 +2,32 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$app          = new Silex\Application();
-$app['debug'] = 'true';
+$app                 = new Silex\Application();
+$app['news_fetcher'] = $app->share(function () {
+    return new \News\RSS\Fetcher();
+});
 
-$app->get('/v1/item/{number}', function ($number) use ($app) {
+$app->get('/v1/item/{number}', function ($number = 0) use ($app) {
     try {
+        /** @var \News\RSS\Fetcher $fetcher */
+        $fetcher = $app['news_fetcher'];
 
-        $itemStub = [
-            'title'      => 'Nius',
-            'content'    => 'costam',
-            'link'       => 'http://onet.pl',
-            'lang'       => 'PL',
-            'created_at' => date('Y-m-d'),
-        ];
-
-        return json_encode($itemStub);
+        return json_encode($fetcher->getLatest(1)[$number]);
     } catch (\Exception $e) {
         return json_encode(['error' => 'Problem with processing']);
     }
 });
 
 $app->get('/v1/list/{page}', function ($page) use ($app) {
+
     try {
-        $itemStub = [
-            'title'      => 'Nius',
-            'content'    => 'costam',
-            'link'       => 'http://onet.pl',
-            'lang'       => 'PL',
-            'created_at' => date('Y-m-d'),
-        ];
+        /** @var \News\RSS\Fetcher $fetcher */
+        $fetcher = $app['news_fetcher'];
 
-        $collection = [];
-        for ($i = 0; $i < 10; $i++) {
-            $collection[] = $itemStub;
-        }
-
-        return json_encode($collection);
+        return json_encode($fetcher->getLatest($page) );
     } catch (\Exception $e) {
         return json_encode(['error' => 'Problem with processing']);
     }
 });
-$app['news_fetcher'] = $app->share(function () {
-    return new \News\RSS\Fetcher();
-});
-
-$app->get('/hello/{name}', function($name) use($app) { 
-    return 'Hello '.$app->escape($name);
-}); 
 
 $app->run(); 
