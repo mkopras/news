@@ -2,7 +2,7 @@
 
 namespace News;
 
-class Item
+class Item implements \JsonSerializable
 {
     protected $title;
 
@@ -15,19 +15,19 @@ class Item
     protected $link;
 
     /**
-     * @param string $title
-     * @param string $content
-     * @param strng $lang
+     * @param string    $title
+     * @param string    $content
+     * @param strng     $lang
      * @param \DateTime $created_at
-     * @param string $link
+     * @param string    $link
      */
     public function __construct($title, $content, $lang, \DateTime $created_at, $link)
     {
-        $this->title = $title;
-        $this->content = $content;
-        $this->lang = $lang;
+        $this->title      = $title;
+        $this->content    = $content;
+        $this->lang       = $lang;
         $this->created_at = $created_at;
-        $this->link = $link;
+        $this->link       = $link;
     }
 
     /**
@@ -55,7 +55,7 @@ class Item
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -69,4 +69,17 @@ class Item
     {
         return $this->link;
     }
+
+    function jsonSerialize()
+    {
+        return [
+            'title'      => $this->getTitle(),
+            'content'    => $this->getContent(),
+            'lang'       => $this->getLang(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'link'       => $this->getLink(),
+
+        ];
+    }
+
 }
