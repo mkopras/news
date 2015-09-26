@@ -1,5 +1,15 @@
 {
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
     "require": {
-        "silex/silex": "^1.3"
+        "silex/silex": "^1.3",
+        "vinelab/rss": "^1.0"
+    },
+    "extra": {
+        "heroku": {
+            "document-root": "web",
+            "index-document": "index.php"
+        }
     }
 }
